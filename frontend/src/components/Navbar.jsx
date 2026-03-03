@@ -15,7 +15,10 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <Link to="/" className="navbar-brand">TaskTracker</Link>
+        <Link to="/" className="navbar-brand">
+          <span className="navbar-brand-emoji">🌸</span>
+          TaskTracker
+        </Link>
       </div>
       <div className="navbar-right">
         <button className="btn-icon" onClick={toggleTheme} title="Toggle theme">

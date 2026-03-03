@@ -31,7 +31,7 @@ export default function Profile() {
 
   return (
     <div className="profile-page">
-      <h1>Profile</h1>
+      <h1>✨ Profile</h1>
       <form className="profile-form" onSubmit={handleSubmit}>
         <div className="avatar-preview">
           {avatarUrl ? (

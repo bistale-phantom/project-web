@@ -33,7 +33,7 @@ export default function Register() {
   return (
     <div className="auth-page">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <h2>Register</h2>
+        <h2>💖 Register</h2>
         <input
           type="text"
           placeholder="Display Name"

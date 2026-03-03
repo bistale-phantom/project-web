@@ -72,7 +72,7 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>Dashboard</h1>
+        <h1><span className="cute-emoji">✨</span> Dashboard</h1>
         <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
           {showForm ? "Cancel" : "+ New Project"}
         </button>
@@ -96,11 +96,11 @@ export default function Dashboard() {
       )}
 
       <section className="section">
-        <h2>My Projects</h2>
+        <h2><span className="section-emoji">📁</span> My Projects</h2>
         {loading ? (
           <div className="spinner" />
         ) : projects.length === 0 ? (
-          <p className="empty-text">No projects yet. Create one!</p>
+          <p className="empty-text"><span className="empty-emoji">💖</span> No projects yet. Create your first one!</p>
         ) : (
           <div className="project-grid">
             {projects.map((p) => (
@@ -122,7 +122,7 @@ export default function Dashboard() {
       </section>
 
       <section className="section">
-        <h2>Latest Posts (External API)</h2>
+        <h2><span className="section-emoji">📡</span> Latest Posts (External API)</h2>
         {extLoading ? (
           <div className="spinner" />
         ) : (

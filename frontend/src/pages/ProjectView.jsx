@@ -132,7 +132,7 @@ export default function ProjectView() {
     <div className="project-view">
       <div className="project-view-header">
         <div>
-          <h1>{project.title}</h1>
+          <h1>📋 {project.title}</h1>
           <p className="project-desc">{project.description}</p>
         </div>
         <div className="project-members">

@@ -28,7 +28,7 @@ export default function Login() {
   return (
     <div className="auth-page">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <h2>Login</h2>
+        <h2>🌸 Login</h2>
         <input
           type="email"
           placeholder="Email"
