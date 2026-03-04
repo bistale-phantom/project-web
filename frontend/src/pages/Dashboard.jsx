@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getProjects, createProject, deleteProject } from "../api/projects";
+import { getRecentTasks } from "../api/tasks";
 import { fetchExternalData } from "../api/external";
 import { useToast } from "../context/ToastContext";
 
@@ -11,7 +12,10 @@ export default function Dashboard() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { addToast } = useToast();
-  const navigate = useNavigate();
+
+  // Recent tasks
+  const [recentTasks, setRecentTasks] = useState([]);
+  const [tasksLoading, setTasksLoading] = useState(true);
 
   // External data
   const [externalData, setExternalData] = useState([]);
@@ -19,6 +23,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadProjects();
+    loadRecentTasks();
     loadExternal();
   }, []);
 
@@ -30,6 +35,17 @@ export default function Dashboard() {
       addToast("Failed to load projects", "error");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadRecentTasks = async () => {
+    try {
+      const data = await getRecentTasks(10);
+      setRecentTasks(data);
+    } catch {
+      addToast("Failed to load recent tasks", "error");
+    } finally {
+      setTasksLoading(false);
     }
   };
 
@@ -94,6 +110,24 @@ export default function Dashboard() {
           <button type="submit" className="btn-primary">Create</button>
         </form>
       )}
+
+      <section className="section">
+        <h2><span className="section-emoji">📝</span> Recent Tasks</h2>
+        {tasksLoading ? (
+          <div className="spinner" />
+        ) : recentTasks.length === 0 ? (
+          <p className="empty-text"><span className="empty-emoji">📋</span> No tasks yet. Create a project and add tasks!</p>
+        ) : (
+          <div className="recent-tasks-list">
+            {recentTasks.map((task) => (
+              <Link key={task.id} to={`/projects/${task.project_id}`} className="recent-task-item">
+                <span className="recent-task-title">{task.title}</span>
+                <span className="recent-task-meta">{task.project_title} · {task.status}</span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
 
       <section className="section">
         <h2><span className="section-emoji">📁</span> My Projects</h2>

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProject, addMember } from "../api/projects";
+import { getProject, addMember, updateProject } from "../api/projects";
 import { getTasks, createTask, updateTask, deleteTask } from "../api/tasks";
 import { useSSE } from "../hooks/useSSE";
 import { useToast } from "../context/ToastContext";
@@ -26,6 +26,9 @@ export default function ProjectView() {
   const [newPriority, setNewPriority] = useState("medium");
   const [newAssignee, setNewAssignee] = useState("");
   const [memberEmail, setMemberEmail] = useState("");
+  const [editingProject, setEditingProject] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
 
   const loadData = async () => {
     try {
@@ -125,15 +128,62 @@ export default function ProjectView() {
     }
   };
 
+  const startEditProject = () => {
+    setEditTitle(project.title);
+    setEditDescription(project.description || "");
+    setEditingProject(true);
+  };
+
+  const handleEditProject = async (e) => {
+    e.preventDefault();
+    try {
+      const updated = await updateProject(id, { title: editTitle, description: editDescription });
+      setProject(updated);
+      setEditingProject(false);
+      addToast("Project updated", "success");
+    } catch {
+      addToast("Failed to update project", "error");
+    }
+  };
+
+  const cancelEditProject = () => {
+    setEditingProject(false);
+    setEditTitle("");
+    setEditDescription("");
+  };
+
   if (loading) return <div className="spinner" />;
   if (!project) return null;
 
   return (
     <div className="project-view">
       <div className="project-view-header">
-        <div>
-          <h1>📋 {project.title}</h1>
-          <p className="project-desc">{project.description}</p>
+        <div className="project-title-block">
+          {editingProject ? (
+            <form className="project-edit-form" onSubmit={handleEditProject}>
+              <input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                placeholder="Project title"
+                required
+              />
+              <input
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                placeholder="Description (optional)"
+              />
+              <div className="project-edit-actions">
+                <button type="submit" className="btn-primary">Save</button>
+                <button type="button" className="btn-sm" onClick={cancelEditProject}>Cancel</button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <h1>📋 {project.title}</h1>
+              <p className="project-desc">{project.description}</p>
+              <button className="btn-edit-project" onClick={startEditProject} title="Edit project">✎ Edit</button>
+            </>
+          )}
         </div>
         <div className="project-members">
           <span>Members: {project.members?.map((m) => m.name || m.email).join(", ")}</span>

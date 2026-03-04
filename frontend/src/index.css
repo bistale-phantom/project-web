@@ -413,6 +413,40 @@ label {
   animation: bounce 1.5s ease-in-out infinite;
 }
 
+.recent-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recent-task-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.recent-task-item:hover {
+  border-color: var(--primary);
+  text-decoration: none;
+}
+
+.recent-task-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.recent-task-meta {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
@@ -531,9 +565,44 @@ label {
   flex-wrap: wrap;
 }
 
+.project-title-block {
+  position: relative;
+}
+
 .project-desc {
   color: var(--text-secondary);
   margin-top: 4px;
+}
+
+.btn-edit-project {
+  margin-top: 8px;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.btn-edit-project:hover {
+  text-decoration: underline;
+}
+
+.project-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+}
+
+.project-edit-form input {
+  padding: 10px 14px;
+}
+
+.project-edit-actions {
+  display: flex;
+  gap: 10px;
 }
 
 .project-members {

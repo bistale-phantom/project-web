@@ -120,8 +120,8 @@ def user_dict(u: User) -> dict:
     return {"id": u.id, "email": u.email, "name": u.name, "avatar_url": u.avatar_url}
 
 
-def task_dict(t: Task) -> dict:
-    return {
+def task_dict(t: Task, include_project_title: bool = False) -> dict:
+    d = {
         "id": t.id,
         "title": t.title,
         "status": t.status,
@@ -131,6 +131,9 @@ def task_dict(t: Task) -> dict:
         "assignee_name": t.assignee.name if t.assignee else None,
         "created_at": t.created_at.isoformat() if t.created_at else None,
     }
+    if include_project_title and t.project:
+        d["project_title"] = t.project.title
+    return d
 
 
 def project_dict(p: Project) -> dict:
@@ -258,6 +261,22 @@ def add_member(project_id: int, body: MemberAdd, user: User = Depends(get_curren
 
 
 # --------------- Task routes ---------------
+@app.get("/api/tasks/recent")
+def list_recent_tasks(limit: int = 10, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Return recent tasks across all projects the user has access to."""
+    owned = db.query(Project).filter(Project.owner_id == user.id).all()
+    member_of = user.projects
+    all_projects = {p.id: p for p in owned}
+    for p in member_of:
+        all_projects[p.id] = p
+    tasks = []
+    for p in all_projects.values():
+        for t in p.tasks:
+            tasks.append(task_dict(t, include_project_title=True))
+    tasks.sort(key=lambda x: x["created_at"] or "", reverse=True)
+    return tasks[:limit]
+
+
 @app.get("/api/projects/{project_id}/tasks")
 def list_tasks(project_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     project = db.query(Project).get(project_id)

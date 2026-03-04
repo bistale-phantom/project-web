@@ -3,6 +3,9 @@ import client from "./client";
 export const getTasks = (projectId) =>
   client.get(`/projects/${projectId}/tasks`).then((r) => r.data);
 
+export const getRecentTasks = (limit = 10) =>
+  client.get("/tasks/recent", { params: { limit } }).then((r) => r.data);
+
 export const createTask = (projectId, data) =>
   client.post(`/projects/${projectId}/tasks`, data).then((r) => r.data);
 
